@@ -5,6 +5,7 @@
  */
 
 import Image from "next/image";
+import NewMatchButton from "./NewButtonMatch";
 
 /**
  * Props definition for the Navbar component.
@@ -14,7 +15,13 @@ interface NavbarProps {
    * Callback function triggered when a scoring system is selected.
    * @param system - The selected scoring system value (e.g., 15, 21, or 30).
    */
-  onSelectScoring: (system: number) => void;
+  onStartMatch: (
+    players: { teamA: string[]; teamB: string[] },
+    firstServe: "A" | "B",
+    firstServerName: string,
+    opponentServerName: string,
+    scoringSystemParam?: number
+  ) => void;
 }
 
 /**
@@ -27,9 +34,9 @@ interface NavbarProps {
  *
  * The component is fixed at the top of the viewport and styled using Tailwind CSS.
  */
-export default function Navbar({ onSelectScoring }: NavbarProps) {
+export default function Navbar({ onStartMatch }: NavbarProps) {
   return (
-    <header className="fixed top-0 flex flex-row justify-between items-center bg-navbar text-black w-full font-main py-4 px-4 md:px-28 z-50">
+    <header className="flex fixed top-0 flex-row justify-between items-center bg-navbar text-black w-full font-main py-4 px-4 md:px-28 z-50">
       {/* Left section — Application logo */}
       <div className="flex items-center">
         <Image
@@ -40,19 +47,14 @@ export default function Navbar({ onSelectScoring }: NavbarProps) {
           alt="Badminton Score Logo"
         />
       </div>
-
-      {/* Right section — Scoring system buttons */}
-      <div className="flex flex-row">
-        {/* Generate buttons dynamically for scoring options: 15, 21, 30 */}
+      <div className="flex gap-4">
         {[15, 21, 30].map((num) => (
-          <button
-            key={num} // Unique key for React rendering
-            onClick={() => onSelectScoring(num)} // Invoke callback with selected score system
-            className="bg-white flex justify-center items-center rounded-full md:p-4 mx-1 md:mx-4 w-8 h-8 md:w-16 md:h-16 hover:bg-black hover:text-white transition duration-300"
-          >
-            {/* Button text displaying the scoring value */}
-            <p className="text-sm md:text-3xl font-semibold tracking-wider">{num}</p>
-          </button>
+          <NewMatchButton
+            key={num}
+            onStartMatch={onStartMatch}
+            presetScoring={num}
+            variant="text"
+          />
         ))}
       </div>
     </header>
