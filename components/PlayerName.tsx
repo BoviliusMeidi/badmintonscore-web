@@ -11,7 +11,7 @@ import { JSX } from "react";
  * @property {string | null} [currentServer] - The name of the player currently serving.
  * @property {string | null} [currentReceiver] - The name of the player currently receiver serve.
  */
-interface ScoreboardProps {
+interface PlayerNameProps {
   players: {
     teamA: string[];
     teamB: string[];
@@ -22,7 +22,7 @@ interface ScoreboardProps {
 }
 
 /**
- * ScoreboardPlayers Component
+ * PlayerName Component
  * ---
  * Displays both teams' player names and the match timer in the center.
  * Supports both singles and doubles matches.
@@ -32,19 +32,19 @@ interface ScoreboardProps {
  * - Automatically adjusts text sizes for singles or doubles.
  * - Uses responsive layout with TailwindCSS for both mobile and desktop.
  *
- * @param {ScoreboardProps} props - Component properties.
+ * @param {PlayerNameProps} props - Component properties.
  * @returns {JSX.Element} A responsive scoreboard header showing player names and timer.
  */
-export default function ScoreboardPlayers({
+export default function PlayerName({
   players,
   timer,
   currentServer,
   currentReceiver,
-}: ScoreboardProps): JSX.Element {
+}: PlayerNameProps): JSX.Element {
   return (
-    <div className="flex flex-wrap md:flex-nowrap items-center justify-center px-2 sm:gap-2 font-main tracking-widest">
+    <div className="flex flex-wrap md:flex-nowrap items-center justify-center sm:gap-2 font-main tracking-widest">
       {/* === TEAM A SECTION === */}
-      <div className="flex bg-secondary md:w-1/3 w-full justify-start items-center sm:mb-2 md:mb-0 border-white border-3">
+      <div className="flex bg-secondary md:w-1/2 w-full justify-start items-center sm:mb-2 md:mb-0 sm:ml-20 border-white border-3">
         {/* Team A logo */}
         <Image
           src="/logo-player.svg"
@@ -117,12 +117,12 @@ export default function ScoreboardPlayers({
       </div>
 
       {/* === TIMER SECTION === */}
-      <div className="text-white text-lg sm:text-2xl font-mono sm:px-4 py-1 sm:py-2 text-center w-full md:w-auto">
+      <div className="text-black text-lg sm:text-2xl font-main sm:px-4 py-1 sm:py-2 text-center w-full md:w-60">
         {timer}
       </div>
 
       {/* === TEAM B SECTION === */}
-      <div className="flex items-center bg-secondary md:w-1/3 w-full justify-end sm:mt-2 md:mt-0 border-white border-3">
+      <div className="flex items-center bg-secondary md:w-1/2 w-full justify-end sm:mt-2 md:mt-0 sm:mr-20 border-white border-3">
         {/* Team B player list */}
         <div className="flex flex-col justify-center w-full flex-1">
           {players.teamB.map((name, index) => (
