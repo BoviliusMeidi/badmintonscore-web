@@ -9,6 +9,7 @@ import { JSX } from "react";
  * @property {{ teamA: string[]; teamB: string[] }} players - The player names for both teams (A and B).
  * @property {string} timer - The formatted match timer (e.g., "00:12:45").
  * @property {string | null} [currentServer] - The name of the player currently serving.
+ * @property {string | null} [currentReceiver] - The name of the player currently receiver serve.
  */
 interface ScoreboardProps {
   players: {
@@ -17,6 +18,7 @@ interface ScoreboardProps {
   };
   timer: string;
   currentServer?: string | null;
+  currentReceiver?: string | null;
 }
 
 /**
@@ -37,6 +39,7 @@ export default function ScoreboardPlayers({
   players,
   timer,
   currentServer,
+  currentReceiver,
 }: ScoreboardProps): JSX.Element {
   return (
     <div className="flex flex-wrap md:flex-nowrap items-center justify-center px-2 sm:gap-2 font-main tracking-widest">
@@ -69,21 +72,37 @@ export default function ScoreboardPlayers({
                   {name.toUpperCase()}
                 </p>
 
-                {/* Shuttlecock indicator (serve icon) */}
-                {currentServer === name && (
-                  <Image
-                    src="/shuttlecock.svg"
-                    alt="Serve Indicator"
-                    width={15}
-                    height={15}
-                    className={`sm:w-6 sm:h-6 ${
-                      players.teamA.length === 2
-                        ? ""
-                        : "w-12 h-12 sm:w-12 sm:h-12"
-                    }`}
-                    priority
-                  />
-                )}
+                {/* Server & Receiver */}
+                <div className="flex flex-row items-center gap-1">
+                  {currentReceiver === name && (
+                    <Image
+                      src="/racket.svg"
+                      alt="Receiver Indicator"
+                      width={15}
+                      height={15}
+                      className={`${
+                        players.teamA.length === 2
+                          ? "w-4 h-4 sm:w-6 sm:h-6"
+                          : "w-12 h-12"
+                      }`}
+                      priority
+                    />
+                  )}
+                  {currentServer === name && (
+                    <Image
+                      src="/shuttlecock.svg"
+                      alt="Serve Indicator"
+                      width={15}
+                      height={15}
+                      className={`${
+                        players.teamA.length === 2
+                          ? "w-4 h-4 sm:w-6 sm:h-6"
+                          : "w-12 h-12"
+                      }`}
+                      priority
+                    />
+                  )}
+                </div>
               </div>
 
               {/* Divider between players (for doubles only) */}
@@ -109,24 +128,37 @@ export default function ScoreboardPlayers({
           {players.teamB.map((name, index) => (
             <div key={index} className="flex flex-col justify-center">
               <div className="flex flex-row items-center justify-between px-2">
-                {/* Shuttlecock indicator (on left side) */}
-                {currentServer === name ? (
-                  <Image
-                    src="/shuttlecock.svg"
-                    alt="Serve Indicator"
-                    width={15}
-                    height={15}
-                    className={`sm:w-6 sm:h-6 ${
-                      players.teamB.length === 2
-                        ? ""
-                        : "w-12 h-12 sm:w-12 sm:h-12"
-                    }`}
-                    priority
-                  />
-                ) : (
-                  // Spacer for alignment
-                  <div className="w-6 sm:w-8" />
-                )}
+                {/* Server & Receiver */}
+                <div className="flex flex-row items-center gap-1">
+                  {currentReceiver === name && (
+                    <Image
+                      src="/racket.svg"
+                      alt="Receiver Indicator"
+                      width={15}
+                      height={15}
+                      className={`${
+                        players.teamB.length === 2
+                          ? "w-4 h-4 sm:w-6 sm:h-6"
+                          : "w-12 h-12"
+                      }`}
+                      priority
+                    />
+                  )}
+                  {currentServer === name && (
+                    <Image
+                      src="/shuttlecock.svg"
+                      alt="Serve Indicator"
+                      width={15}
+                      height={15}
+                      className={`${
+                        players.teamB.length === 2
+                          ? "w-4 h-4 sm:w-6 sm:h-6"
+                          : "w-12 h-12"
+                      }`}
+                      priority
+                    />
+                  )}
+                </div>
 
                 {/* Player name */}
                 <p
