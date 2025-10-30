@@ -76,8 +76,8 @@ export default function ScoreBoard({
     <div
       role="button"
       onClick={handleScore}
-      className={`relative font-main flex flex-col justify-center items-center ${side === "A" ? "bg-white text-black" : "bg-black text-white"}
-       p-4 sm:p-6 m-3 sm:m-4 rounded-3xl cursor-pointer transition duration-150 hover:scale-105 w-64 h-52 sm:w-48 md:w-100 md:h-100`}
+      className={`relative font-main flex flex-col justify-center items-center ${side === "A" ? "bg-scoreboard-left text-black" : "bg-scoreboard-right text-white"}
+      py-6 sm:py-12 cursor-pointer hover:bg-scoreboard-hover w-full h-full`}
       aria-label={`Scoreboard for side ${side}`}
     >
       {/* === Serving Indicator === */}
