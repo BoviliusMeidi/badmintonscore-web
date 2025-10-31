@@ -76,13 +76,17 @@ export default function ScoreBoard({
     <div
       role="button"
       onClick={handleScore}
-      className={`relative font-main flex flex-col justify-center items-center ${side === "A" ? "bg-scoreboard-left text-black" : "bg-scoreboard-right text-white"}
-      py-6 sm:py-12 cursor-pointer hover:bg-scoreboard-hover w-full h-full`}
+      className={`relative font-main flex flex-col text-white justify-center items-center ${
+        side === "A"
+          ? "bg-scoreboard-left  border-white border-t-3 border-l-3 border-r-3 sm:border-3"
+          : "bg-scoreboard-right  border-white border-b-3 border-l-3 border-r-3 sm:border-3"
+      }
+      py-6 sm:py-12 cursor-pointer hover:bg-hover w-full h-60 sm:h-full`}
       aria-label={`Scoreboard for side ${side}`}
     >
       {/* === Serving Indicator === */}
       {isServing && (
-        <div className="absolute top-5 right-3 bg-primary rounded-full p-3 shadow-md animate-bounce">
+        <div className="absolute top-5 right-3 bg-indicator rounded-full p-3 shadow-md animate-bounce">
           <Image
             src="/shuttlecock.svg"
             width={35}
@@ -101,7 +105,7 @@ export default function ScoreBoard({
       </div>
 
       {/* === Set Counter === */}
-      <div className="absolute bottom-3 left-3 w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center bg-secondary rounded-full">
+      <div className="absolute bottom-3 left-3 w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center bg-indicator rounded-full">
         <p className="text-base sm:text-lg md:text-xl text-black font-semibold tracking-widest select-none">
           {sets > 0 ? "I".repeat(Math.min(sets, 5)) : "-"}
         </p>
