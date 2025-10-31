@@ -19,7 +19,7 @@ interface ActionButtonsProps {
     players: { teamA: string[]; teamB: string[] },
     firstServe: "A" | "B",
     firstServerName: string,
-    opponentServerName: string,
+    opponentReceiverName: string,
     scoringSystemParam?: number
   ) => void;
 }
@@ -45,7 +45,7 @@ export default function ActionButtons({
   onStartMatch,
 }: ActionButtonsProps): JSX.Element {
   return (
-    <div className="flex flex-row gap-6 md:gap-2 justify-center items-center text-black font-main">
+    <div className="flex flex-row gap-4 md:gap-2 justify-center items-center text-black font-main">
       {/* Undo Button */}
       <IconButton icon="/undo.svg" alt="Undo" onAction={onUndo} />
 
