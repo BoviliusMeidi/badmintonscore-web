@@ -22,6 +22,8 @@ interface NavbarProps {
     opponentServerName: string,
     scoringSystemParam?: number
   ) => void;
+
+  isMatchStarted: boolean;
 }
 
 /**
@@ -34,29 +36,33 @@ interface NavbarProps {
  *
  * The component is fixed at the top of the viewport and styled using Tailwind CSS.
  */
-export default function Navbar({ onStartMatch }: NavbarProps) {
+export default function Navbar({ onStartMatch, isMatchStarted }: NavbarProps) {
   return (
-    <header className="flex fixed top-0 flex-row justify-between items-center bg-navbar text-black w-full font-main py-4 px-4 md:px-28 z-50">
+    <header className={`flex fixed top-0 flex-row ${isMatchStarted ? "justify-between" : "md:justify-end"} items-center bg-transparent text-black w-full font-main py-4 px-4 md:px-28 z-50`}>
       {/* Left section — Application logo */}
       <div className="flex items-center">
-        <Image
-          src="logo-navbar.svg"
-          width={180}
-          height={180}
-          className="w-18 md:w-36"
-          alt="Badminton Score Logo"
-        />
-      </div>
-      <div className="flex gap-4">
-        {[15, 21, 30].map((num) => (
-          <NewMatchButton
-            key={num}
-            onStartMatch={onStartMatch}
-            presetScoring={num}
-            variant="text"
+        <a href={"/"}>
+          <Image
+            src="logo-navbar.svg"
+            width={180}
+            height={180}
+            className="w-18 md:w-36"
+            alt="Badminton Score Logo"
           />
-        ))}
+        </a>
       </div>
+      {isMatchStarted && (
+        <div className="flex gap-4 ">
+          {[15, 21, 30].map((num) => (
+            <NewMatchButton
+              key={num}
+              onStartMatch={onStartMatch}
+              presetScoring={num}
+              variant="text"
+            />
+          ))}
+        </div>
+      )}
     </header>
   );
 }
