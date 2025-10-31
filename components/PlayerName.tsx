@@ -44,7 +44,7 @@ export default function PlayerName({
   return (
     <div className="flex flex-wrap md:flex-nowrap items-center justify-center sm:gap-2 font-main tracking-widest">
       {/* === TEAM A SECTION === */}
-      <div className="flex bg-scoreboard-left md:w-1/2 w-full justify-start items-center sm:mb-2 md:mb-0 sm:ml-20 border-white border-3">
+      <div className="flex bg-player-name md:w-1/2 w-full justify-start items-center sm:mb-2 md:mb-0 sm:ml-20 border-white border-3">
         {/* Team A logo */}
         <Image
           src="/logo-white.svg"
@@ -122,7 +122,7 @@ export default function PlayerName({
       </div>
 
       {/* === TEAM B SECTION === */}
-      <div className="flex items-center bg-scoreboard-right md:w-1/2 w-full justify-end sm:mt-2 md:mt-0 sm:mr-20 border-white border-3">
+      <div className="flex items-center bg-player-name md:w-1/2 w-full justify-end sm:mt-2 md:mt-0 sm:mr-20 border-white border-3">
         {/* Team B player list */}
         <div className="flex flex-col justify-center w-full flex-1">
           {players.teamB.map((name, index) => (
