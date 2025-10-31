@@ -43,17 +43,15 @@ export default function IconButton({
     <button
       onClick={onAction}
       aria-label={alt}
-      className="group bg-white flex justify-center items-center rounded md:p-4 mx-1 md:mx-4 w-12 h-12 md:w-18 md:h-18 hover:bg-black transition duration-300 cursor-pointer"
+      className="group bg-icon flex justify-center items-center rounded md:p-4 mx-1 md:mx-4 w-12 h-12 md:w-18 md:h-18 transition duration-300 cursor-pointer"
     >
       <Image
         src={icon}
-        width={25}
-        height={25}
+        width={50}
+        height={50}
         alt={alt}
         className="
-          transition duration-300 
-          group-hover:filter group-hover:invert 
-          group-hover:brightness-0 group-hover:saturate-0
+        w-8 h-8 sm:w-16 sm:h-16 transition duration-300 group-hover:filter group-hover:invert group-hover:brightness-0 group-hover:saturate-0
         "
       />
     </button>
