@@ -44,14 +44,14 @@ export default function PlayerName({
   return (
     <div className="flex flex-wrap md:flex-nowrap items-center justify-center sm:gap-2 font-main tracking-widest">
       {/* === TEAM A SECTION === */}
-      <div className="flex bg-secondary md:w-1/2 w-full justify-start items-center sm:mb-2 md:mb-0 sm:ml-20 border-white border-3">
+      <div className="flex bg-scoreboard-left md:w-1/2 w-full justify-start items-center sm:mb-2 md:mb-0 sm:ml-20 border-white border-3">
         {/* Team A logo */}
         <Image
-          src="/logo-player.svg"
+          src="/logo-white.svg"
           width={40}
           height={40}
           alt="Logo Player A"
-          className="p-0 sm:w-16 sm:h-16"
+          className="p-1 sm:w-16 sm:h-16"
         />
         {/* Divider line */}
         <div className="bg-white w-1 h-12 sm:h-20" />
@@ -60,10 +60,10 @@ export default function PlayerName({
         <div className="flex flex-col justify-center w-full flex-1">
           {players.teamA.map((name, index) => (
             <div key={index} className="flex flex-col justify-center">
-              <div className="flex flex-row items-center justify-between px-2">
+              <div className="flex flex-row items-center justify-between">
                 {/* Player name */}
                 <p
-                  className={`font-bold text-black text-right ${
+                  className={`font-bold text-white text-right ml-3 ${
                     players.teamA.length === 2
                       ? "text-xs md:text-2xl"
                       : "text-xl md:text-4xl"
@@ -76,28 +76,28 @@ export default function PlayerName({
                 <div className="flex flex-row items-center gap-1">
                   {currentReceiver === name && (
                     <Image
-                      src="/racket.svg"
+                      src="/racket-white.svg"
                       alt="Receiver Indicator"
                       width={15}
                       height={15}
-                      className={`${
+                      className={`mr-3 ${
                         players.teamA.length === 2
                           ? "w-4 h-4 sm:w-6 sm:h-6"
-                          : "w-12 h-12"
+                          : "w-12 h-12 px-2 sm:px-0"
                       }`}
                       priority
                     />
                   )}
                   {currentServer === name && (
                     <Image
-                      src="/shuttlecock.svg"
+                      src="/shuttlecock-white.svg"
                       alt="Serve Indicator"
                       width={15}
                       height={15}
-                      className={`${
+                      className={`mr-3 ${
                         players.teamA.length === 2
-                          ? "w-4 h-4 sm:w-6 sm:h-6"
-                          : "w-12 h-12"
+                          ? "w-4 h-4 sm:w-6 sm:h-6 "
+                          : "w-12 h-12 px-2 sm:px-0"
                       }`}
                       priority
                     />
@@ -117,43 +117,43 @@ export default function PlayerName({
       </div>
 
       {/* === TIMER SECTION === */}
-      <div className="text-black text-lg sm:text-2xl font-main sm:px-4 py-1 sm:py-2 text-center w-full md:w-60">
+      <div className="text-white text-lg sm:text-2xl font-main sm:px-4 py-1 sm:py-2 text-center w-full md:w-60">
         {timer}
       </div>
 
       {/* === TEAM B SECTION === */}
-      <div className="flex items-center bg-secondary md:w-1/2 w-full justify-end sm:mt-2 md:mt-0 sm:mr-20 border-white border-3">
+      <div className="flex items-center bg-scoreboard-right md:w-1/2 w-full justify-end sm:mt-2 md:mt-0 sm:mr-20 border-white border-3">
         {/* Team B player list */}
         <div className="flex flex-col justify-center w-full flex-1">
           {players.teamB.map((name, index) => (
             <div key={index} className="flex flex-col justify-center">
-              <div className="flex flex-row items-center justify-between px-2">
+              <div className="flex flex-row items-center justify-between">
                 {/* Server & Receiver */}
                 <div className="flex flex-row items-center gap-1">
                   {currentReceiver === name && (
                     <Image
-                      src="/racket.svg"
+                      src="/racket-white.svg"
                       alt="Receiver Indicator"
                       width={15}
                       height={15}
-                      className={`${
+                      className={`ml-3 ${
                         players.teamB.length === 2
                           ? "w-4 h-4 sm:w-6 sm:h-6"
-                          : "w-12 h-12"
+                          : "w-12 h-12 px-2 sm:px-0"
                       }`}
                       priority
                     />
                   )}
                   {currentServer === name && (
                     <Image
-                      src="/shuttlecock.svg"
+                      src="/shuttlecock-white.svg"
                       alt="Serve Indicator"
                       width={15}
                       height={15}
-                      className={`${
+                      className={` ml-3 ${
                         players.teamB.length === 2
                           ? "w-4 h-4 sm:w-6 sm:h-6"
-                          : "w-12 h-12"
+                          : "w-12 h-12 px-2 sm:px-0"
                       }`}
                       priority
                     />
@@ -162,7 +162,7 @@ export default function PlayerName({
 
                 {/* Player name */}
                 <p
-                  className={`font-bold text-black text-right ${
+                  className={`font-bold text-white text-right mr-3  ${
                     players.teamB.length === 2
                       ? "text-xs md:text-2xl"
                       : "text-xl md:text-4xl"
@@ -185,11 +185,11 @@ export default function PlayerName({
         {/* Divider line & Team B logo */}
         <div className="bg-white w-1 h-12 sm:h-20" />
         <Image
-          src="/logo-player.svg"
+          src="/logo-white.svg"
           width={40}
           height={40}
           alt="Logo Player B"
-          className="p-0 sm:w-16 sm:h-16"
+          className="p-1 sm:w-16 sm:h-16"
         />
       </div>
     </div>
