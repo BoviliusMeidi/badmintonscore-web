@@ -1,26 +1,24 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-main: var(--font-main);
+  --font-secondary: var(--font-secondary);
+  --color-primary: #253d2c;
+  --color-secondary: #4c5c68;
+  --color-green: #1a9604;
+  --color-yellow: #deb100 ;
+  --color-navbar: #c72b32;
+  --color-indicator: #ffffff;
+  --color-icon: transparent;
+  --color-hover: #314f3a;
+  --color-scoreboard-left: transparent;
+  --color-scoreboard-right: transparent;
+  --color-player-name: #314f3a;
+  --text-scoreboard: 16rem;
+  --text-main-page: 11rem;
+  --drop-shadow-icon: 0 8px 16px rgba(0, 0, 0, 0.8);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
