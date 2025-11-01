@@ -1,65 +1,124 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import Navbar from "@/components/NavBar";
+import StartMatchSection from "@/components/StartMatch";
+import MatchHistoryModal from "@/components/MatchHistoryModal";
+import MatchInterface from "@/components/MatchInterface";
+import SetFinishModal from "@/components/SetFinishModal";
+import { useMatchLogic } from "@/hooks/useMatchLogic";
+
+/**
+ * @summary
+ * The main application page component (root) for the Badminton Scoreboard.
+ *
+ * @description
+ * This component serves as the primary container and view layer for the application.
+ * It is a "dumb" component that outsources all complex state management and
+ * business logic to the `useMatchLogic` custom hook.
+ *
+ * Its sole responsibilities are:
+ * 1. Calling `useMatchLogic` to get the current state and all event handlers.
+ * 2. Conditionally rendering either the `StartMatchSection` or the main `MatchInterface`.
+ * 3. Rendering the (hidden by default) `SetFinishModal` and `MatchHistoryModal`.
+ * 4. Passing the correct state and handlers (props) down to these child components.
+ *
+ * @returns {JSX.Element} The fully composed application UI.
+ */
+export default function Page() {
+  const {
+    // State properties
+    pointsA,
+    setsA,
+    pointsB,
+    setsB,
+    players,
+    serverSide,
+    currentServer,
+    currentReceiver,
+    scoringSystem,
+    setFinishData,
+    time,
+    isPaused,
+    showMatchHistoryModal,
+    showSetFinishModal,
+    historyForModal,
+    isMatchStarted,
+
+    // Handlers and functions
+    formatTime,
+    handleIncrement,
+    handleStartMatch,
+    handleUndo,
+    handlePause,
+    handleResume,
+    continueNextSet,
+    resetMatchHistory,
+    setShowMatchHistoryModal,
+
+    // Setters for controlled components
+    setCurrentServer,
+    setCurrentReceiver,
+  } = useMatchLogic();
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div className="flex flex-col h-screen bg-primary font-sans relative z-0 before:content-[''] before:absolute before:inset-0 before:bg-[url('/background.svg')] before:bg-no-repeat before:bg-cover before:opacity-20 before:z-[-1]">
+      {/* --- Navigation Bar --- */}
+      <Navbar onStartMatch={handleStartMatch} isMatchStarted={isMatchStarted} />
+      <div className="h-20 sm:h-24" />
+
+      {/* --- Main Content Area --- */}
+      <div className="flex flex-col items-center flex-1 w-full">
+        {!isMatchStarted ? (
+          // 1. Show Start Section if match is not active
+          <StartMatchSection onStartMatch={handleStartMatch} />
+        ) : (
+          // 2. Show Match Interface if match is active
+          <MatchInterface
+            players={players}
+            formatTime={formatTime}
+            time={time}
+            currentServer={currentServer}
+            currentReceiver={currentReceiver}
+            pointsA={pointsA}
+            setsA={setsA}
+            pointsB={pointsB}
+            setsB={setsB}
+            handleIncrement={handleIncrement}
+            isPaused={isPaused}
+            serverSide={serverSide}
+            handleUndo={handleUndo}
+            handlePause={handlePause}
+            handleStartMatch={handleStartMatch}
+            setShowMatchHistoryModal={setShowMatchHistoryModal}
+            handleResume={handleResume}
+          />
+        )}
+      </div>
+
+      {/* --- Modals (Rendered conditionally by their internal state) --- */}
+
+      {/* Set Finish Modal: Appears when a set is won */}
+      <SetFinishModal
+        show={showSetFinishModal}
+        gameData={setFinishData}
+        players={players}
+        scoringSystem={scoringSystem}
+        currentServer={currentServer}
+        onSetCurrentServer={setCurrentServer}
+        currentReceiver={currentReceiver}
+        onSetCurrentReceiver={setCurrentReceiver}
+        onContinue={continueNextSet}
+      />
+
+      {/* Match History Modal: Appears when history icon is clicked */}
+      <MatchHistoryModal
+        show={showMatchHistoryModal}
+        onClose={() => setShowMatchHistoryModal(false)}
+        matchHistory={historyForModal}
+        players={players}
+        scoringSystem={scoringSystem}
+        onReset={resetMatchHistory}
+      />
     </div>
   );
 }
