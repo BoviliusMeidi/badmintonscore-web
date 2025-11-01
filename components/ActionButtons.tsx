@@ -2,7 +2,7 @@
 
 import { JSX } from "react";
 import IconButton from "./IconButton";
-import NewMatchButton from "./NewButtonMatch";
+import NewMatchButton from "./NewMatch";
 
 /**
  * Props interface for the ActionButtons component.

@@ -5,7 +5,7 @@
  */
 
 import Image from "next/image";
-import NewMatchButton from "./NewButtonMatch";
+import NewMatch from "./NewMatch";
 
 /**
  * Props definition for the Navbar component.
@@ -38,7 +38,11 @@ interface NavbarProps {
  */
 export default function Navbar({ onStartMatch, isMatchStarted }: NavbarProps) {
   return (
-    <header className={`flex fixed top-0 flex-row ${isMatchStarted ? "justify-between" : "md:justify-end"} items-center bg-transparent text-black w-full font-main py-4 px-4 md:px-28 z-50`}>
+    <header
+      className={`flex fixed top-0 flex-row ${
+        isMatchStarted ? "justify-between" : "md:justify-end"
+      } items-center bg-transparent text-black w-full font-main py-4 px-4 md:px-28 z-50`}
+    >
       {/* Left section — Application logo */}
       <div className="flex items-center">
         <a href={"/"}>
@@ -54,7 +58,7 @@ export default function Navbar({ onStartMatch, isMatchStarted }: NavbarProps) {
       {isMatchStarted && (
         <div className="flex gap-4 ">
           {[15, 21, 30].map((num) => (
-            <NewMatchButton
+            <NewMatch
               key={num}
               onStartMatch={onStartMatch}
               presetScoring={num}

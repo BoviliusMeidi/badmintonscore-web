@@ -89,7 +89,7 @@ export default function GameStatsView({
           {stats.totalPointsWonB}
         </div>
 
-        <div className="text-gray-600">Most Consecutive</div>
+        <div className="text-gray-600">Most Consecutive Points</div>
         <div className="text-center text-xl font-semibold">
           {stats.mostConsecutivePointsA}
         </div>
