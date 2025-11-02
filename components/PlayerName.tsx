@@ -42,30 +42,52 @@ export default function PlayerName({
   currentReceiver,
 }: PlayerNameProps): JSX.Element {
   return (
-    <div className="flex flex-wrap md:flex-nowrap items-center justify-center sm:gap-2 font-main tracking-widest">
+    <div className="flex flex-wrap md:flex-nowrap items-center justify-center sm:gap-2 font-secondary tracking-widest">
       {/* === TEAM A SECTION === */}
-      <div className="flex bg-player-name md:w-1/2 w-full justify-start items-center sm:mb-2 md:mb-0 sm:ml-20 border-white border-3">
+      <div className="flex bg-player-name w-full h-full md:w-1/2 justify-start items-center sm:mb-2 md:mb-0 sm:ml-20 border-white border-3">
         {/* Team A logo */}
-        <Image
-          src="/logo-white.svg"
-          width={40}
-          height={40}
-          alt="Logo Player A"
-          className="p-1 sm:w-16 sm:h-16"
-        />
-        {/* Divider line */}
-        <div className="bg-white w-1 h-12 sm:h-20" />
+        {players.teamA.length === 1 && (
+          <Image
+            src="/logo-white.svg"
+            width={40}
+            height={40}
+            alt="Logo Player A"
+            className="p-1 sm:w-16 sm:h-16"
+          />
+        )}
+        {players.teamA.length === 2 && (
+          <>
+            <div className="flex flex-col justify-center items-center">
+              <Image
+                src="/l.svg"
+                width={20}
+                height={20}
+                alt="L letter"
+                className="p-1 w-6 h-6 sm:w-8 sm:h-8 sm:mb-1"
+              />
+              <div className="h-1 w-full bg-white" />
+              <Image
+                src="/r.svg"
+                width={20}
+                height={20}
+                alt="R letter"
+                className="p-1 w-6 h-6 sm:w-8 sm:h-8 sm:mt-1"
+              />
+            </div>
+          </>
+        )}
+        <div className="bg-white w-1 h-15 sm:h-21" />
 
         {/* Team A player list */}
-        <div className="flex flex-col justify-center w-full flex-1">
+        <div className="flex flex-col justify-center w-full flex-1 h-full">
           {players.teamA.map((name, index) => (
-            <div key={index} className="flex flex-col justify-center">
-              <div className="flex flex-row items-center justify-between">
+            <div key={index} className="flex flex-col justify-">
+              <div className="flex flex-row items-center justify-between p-1">
                 {/* Player name */}
                 <p
                   className={`font-bold text-white text-right ml-3 ${
                     players.teamA.length === 2
-                      ? "text-xs md:text-2xl"
+                      ? "text-sm md:text-2xl"
                       : "text-xl md:text-4xl"
                   }`}
                 >
@@ -107,7 +129,7 @@ export default function PlayerName({
 
               {/* Divider between players (for doubles only) */}
               {index === 0 && players.teamA.length === 2 && (
-                <div className="py-1">
+                <div className="">
                   <div className="h-1 w-full bg-white" />
                 </div>
               )}
@@ -124,12 +146,12 @@ export default function PlayerName({
       {/* === TEAM B SECTION === */}
       <div className="flex items-center bg-player-name md:w-1/2 w-full justify-end sm:mt-2 md:mt-0 sm:mr-20 border-white border-3">
         {/* Team B player list */}
-        <div className="flex flex-col justify-center w-full flex-1">
+        <div className="flex flex-col justify-center w-full flex-1 h-full">
           {players.teamB.map((name, index) => (
             <div key={index} className="flex flex-col justify-center">
-              <div className="flex flex-row items-center justify-between">
+              <div className="flex flex-row items-center justify-between p-1">
                 {/* Server & Receiver */}
-                <div className="flex flex-row items-center gap-1">
+                <div className="flex flex-row items-center">
                   {currentReceiver === name && (
                     <Image
                       src="/racket-white.svg"
@@ -162,9 +184,9 @@ export default function PlayerName({
 
                 {/* Player name */}
                 <p
-                  className={`font-bold text-white text-right mr-3  ${
+                  className={`font-bold text-white text-right mr-3 ${
                     players.teamB.length === 2
-                      ? "text-xs md:text-2xl"
+                      ? "text-sm md:text-2xl"
                       : "text-xl md:text-4xl"
                   }`}
                 >
@@ -174,7 +196,7 @@ export default function PlayerName({
 
               {/* Divider between players (for doubles only) */}
               {index === 0 && players.teamB.length === 2 && (
-                <div className="py-1">
+                <div className="">
                   <div className="h-1 w-full bg-white" />
                 </div>
               )}
@@ -183,14 +205,37 @@ export default function PlayerName({
         </div>
 
         {/* Divider line & Team B logo */}
-        <div className="bg-white w-1 h-12 sm:h-20" />
-        <Image
-          src="/logo-white.svg"
-          width={40}
-          height={40}
-          alt="Logo Player B"
-          className="p-1 sm:w-16 sm:h-16"
-        />
+        <div className="bg-white w-1 h-15 sm:h-21" />
+        {players.teamB.length === 1 && (
+          <Image
+            src="/logo-white.svg"
+            width={40}
+            height={40}
+            alt="Logo Player B"
+            className="sm:w-16 sm:h-16"
+          />
+        )}
+        {players.teamB.length === 2 && (
+          <>
+            <div className="flex flex-col justify-center items-center">
+              <Image
+                src="/r.svg"
+                width={20}
+                height={20}
+                alt="R letter"
+                className="p-1 w-6 h-6 sm:w-8 sm:h-8 sm:mb-1"
+              />
+              <div className="h-1 w-full bg-white" />
+              <Image
+                src="/l.svg"
+                width={20}
+                height={20}
+                alt="L letter"
+                className="p-1 w-6 h-6 sm:w-8 sm:h-8 sm:mt-1"
+              />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
