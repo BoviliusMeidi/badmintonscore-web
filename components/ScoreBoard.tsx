@@ -6,7 +6,7 @@
  */
 
 import Image from "next/image";
-import React from "react";
+import { useState } from "react";
 
 /**
  * Props for the ScoreBoard component.
@@ -52,12 +52,15 @@ export default function ScoreBoard({
   disabled = false,
   isServing = false,
 }: ScoreBoardProps) {
+  const [isThrottled, setIsThrottled] = useState(false);
+
   /**
    * Handles a click event on the scoreboard.
    * Increments the score unless the board is disabled.
    */
   const handleScore = () => {
-    if (disabled) return;
+    if (disabled || isThrottled) return;
+    setIsThrottled(true);
 
     let newPoints = points + 1;
     let newSets = sets;
@@ -70,6 +73,10 @@ export default function ScoreBoard({
 
     // Trigger callback with updated values
     onIncrement(side, newPoints, newSets);
+
+    setTimeout(() => {
+      setIsThrottled(false);
+    }, 1000);
   };
 
   return (
