@@ -6,6 +6,7 @@ import {
   GameSnapshot,
   PointSnapshot,
 } from "@/types/match";
+import { getTeamPositions } from "./getTeamPositions";
 
 /**
  * @summary The default, clean state for a new match.
@@ -47,29 +48,6 @@ export const initialState: MatchState = {
  * @returns {string | null} The name of the calculated receiver.
  * @internal
  */
-function computeReceiver(
-  state: MatchState,
-  servingSide: "A" | "B",
-  pointsAVal: number,
-  pointsBVal: number
-): string | null {
-  const { players, receiverOffsetA, receiverOffsetB } = state;
-  const { teamA, teamB } = players;
-  const isSingle = teamA.length === 1;
-
-  if (isSingle) {
-    return servingSide === "A" ? teamB[0] ?? null : teamA[0] ?? null;
-  }
-  if (servingSide === "A") {
-    const parity = pointsAVal % 2; // 0 for even (right), 1 for odd (left)
-    const idx = (receiverOffsetA + parity) % teamB.length;
-    return teamB[idx] ?? null;
-  } else {
-    const parity = pointsBVal % 2;
-    const idx = (receiverOffsetB + parity) % teamA.length;
-    return teamA[idx] ?? null;
-  }
-}
 
 /**
  * @summary Creates a "frozen" snapshot of the current match state.
@@ -89,6 +67,10 @@ function createSnapshot(state: MatchState): PointSnapshot {
     currentReceiver: state.currentReceiver,
     nextServer: state.nextServer,
     serveIndex: state.serveIndex,
+    players: {
+      teamA: [...state.players.teamA],
+      teamB: [...state.players.teamB],
+    },
   };
 }
 
@@ -122,13 +104,27 @@ export function matchReducer(
         startTime,
       } = action.payload;
 
+      let teamPositions = null;
+
       const { teamA, teamB } = newPlayers;
+
       const single = teamA.length === 1;
+      if (single) {
+        teamPositions = newPlayers;
+      } else {
+        teamPositions = getTeamPositions({
+          servingSide: firstServe,
+          team: newPlayers,
+          serverName: firstServerName,
+          receiverName: opponentReceiverName,
+          pointsA: 0,
+          pointsB: 0,
+        });
+      }
+
       let rotation: string[] = [];
       let server: string | null = null;
       let receiver: string | null = null;
-      let offsetA = 0; // Offset for Team B (when A serves)
-      let offsetB = 0; // Offset for Team A (when B serves)
 
       if (single) {
         server = firstServe === "A" ? teamA[0] : teamB[0];
@@ -148,15 +144,6 @@ export function matchReducer(
         rotation = [a, d, c, b]; // BWF Doubles Serve Rotation
         server = firstServerName;
         receiver = opponentReceiverName;
-
-        // Set baseline offsets
-        if (firstServe === "A") {
-          offsetA = oIdx; // Team B's offset is receiver's index
-          offsetB = sIdx; // Team A's offset is server's index
-        } else {
-          offsetA = sIdx; // Team B's offset is server's index
-          offsetB = oIdx; // Team A's offset is receiver's index
-        }
       }
 
       const initIndex = rotation.findIndex((p) => p === firstServerName);
@@ -164,7 +151,7 @@ export function matchReducer(
 
       return {
         ...initialState, // Reset all state to defaults
-        players: newPlayers,
+        players: teamPositions,
         scoringSystem: scoringSystemParam ?? initialState.scoringSystem,
         currentSetStartTime: startTime,
         serveOrder: rotation,
@@ -173,8 +160,6 @@ export function matchReducer(
         serverSide: firstServe,
         currentServer: server,
         currentReceiver: receiver,
-        receiverOffsetA: offsetA,
-        receiverOffsetB: offsetB,
       };
     }
 
@@ -187,6 +172,9 @@ export function matchReducer(
 
       const newPointsA = side === "A" ? state.pointsA + 1 : state.pointsA;
       const newPointsB = side === "B" ? state.pointsB + 1 : state.pointsB;
+
+      const isEvenA = newPointsA % 2 === 0;
+      const isEvenB = newPointsB % 2 === 0;
 
       const isSetFinished =
         (newPointsA >= state.scoringSystem && newPointsA - newPointsB >= 2) ||
@@ -270,7 +258,28 @@ export function matchReducer(
           defaultNextServer = winnerTeam[0];
         }
 
-        const defaultNextReceiver = loserTeam[0]; // Default receiver is even player
+        const isSingle = state.players.teamA.length === 1;
+        let teamPositions = null;
+
+        if (isSingle) {
+          teamPositions = state.players;
+        } else {
+          teamPositions = getTeamPositions({
+            servingSide: winnerSide,
+            team: state.players,
+            serverName: defaultNextServer,
+            receiverName: state.currentReceiver!,
+            pointsA: newPointsA,
+            pointsB: newPointsB,
+          });
+        }
+
+        let defaultNextReceiver = null;
+        if (winnerSide === "A") {
+          defaultNextReceiver = loserTeam[0];
+        } else {
+          defaultNextReceiver = loserTeam[1];
+        }
 
         return {
           ...state,
@@ -285,6 +294,7 @@ export function matchReducer(
           // Set state to new defaults for the modal
           currentServer: defaultNextServer,
           currentReceiver: defaultNextReceiver,
+          players: teamPositions,
 
           currentSetPointHistory: [], // Clear history for next set
         };
@@ -308,13 +318,37 @@ export function matchReducer(
         newServerSide = state.players.teamA.includes(newServer) ? "A" : "B";
       }
 
-      // Calculate the next receiver based on the new state
-      const newReceiver = computeReceiver(
-        state,
-        newServerSide,
-        newPointsA,
-        newPointsB
-      );
+      const isSingle = state.players.teamA.length === 1;
+      let teamPositions = null;
+      let newReceiver = null;
+
+      if (isSingle) {
+        teamPositions = state.players;
+        if (newServerSide === "A") {
+          newReceiver = teamPositions.teamB[0];
+        } else if (newServerSide === "B") {
+          newReceiver = teamPositions.teamA[0];
+        }
+      } else {
+        teamPositions = getTeamPositions({
+          servingSide: side,
+          team: state.players,
+          serverName: newServer!,
+          receiverName: state.currentReceiver!,
+          pointsA: newPointsA,
+          pointsB: newPointsB,
+        });
+
+        if (newServerSide === "A" && isEvenA) {
+          newReceiver = teamPositions.teamB[0];
+        } else if (newServerSide === "A" && !isEvenA) {
+          newReceiver = teamPositions.teamB[1];
+        } else if (newServerSide === "B" && isEvenB) {
+          newReceiver = teamPositions.teamA[1];
+        } else if (newServerSide === "B" && !isEvenB) {
+          newReceiver = teamPositions.teamA[0];
+        }
+      }
 
       return {
         ...state,
@@ -329,6 +363,7 @@ export function matchReducer(
         nextServer: newNext,
         serveIndex: newServeIndex,
         currentReceiver: newReceiver,
+        players: teamPositions,
       };
     }
 
@@ -355,15 +390,11 @@ export function matchReducer(
 
       const isSingle = players.teamA.length === 1;
       let newServeOrder = state.serveOrder;
-      let newOffsetA = state.receiverOffsetA;
-      let newOffsetB = state.receiverOffsetB;
 
       if (isSingle) {
         newServeOrder = players.teamA.includes(nextServerName)
           ? [nextServerName, nextReceiverName]
           : [nextServerName, nextReceiverName];
-        newOffsetA = 0;
-        newOffsetB = 0;
       } else if (players.teamA.length > 1) {
         // Re-calculate rotation and offsets based on modal selection
         const serverTeam = players.teamA.includes(nextServerName)
@@ -384,14 +415,21 @@ export function matchReducer(
           serverPartner,
           nextReceiverName,
         ];
+      }
 
-        if (players.teamA.includes(nextServerName)) {
-          newOffsetA = oIdx; // Team B offset = receiver index
-          newOffsetB = sIdx; // Team A offset = server index
-        } else {
-          newOffsetA = sIdx; // Team B offset = server index
-          newOffsetB = oIdx; // Team A offset = receiver index
-        }
+      let teamPositions = null;
+
+      if (isSingle) {
+        teamPositions = state.players;
+      } else {
+        teamPositions = getTeamPositions({
+          servingSide: state.serverSide!,
+          team: state.players,
+          serverName: nextServerName,
+          receiverName: nextReceiverName,
+          pointsA: 0,
+          pointsB: 0,
+        });
       }
 
       return {
@@ -408,8 +446,7 @@ export function matchReducer(
         serveOrder: newServeOrder,
         serveIndex: 0, // Start new set at index 0
         nextServer: newServeOrder[1] ?? null,
-        receiverOffsetA: newOffsetA,
-        receiverOffsetB: newOffsetB,
+        players: teamPositions,
       };
     }
 
