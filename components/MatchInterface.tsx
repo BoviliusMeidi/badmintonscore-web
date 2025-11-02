@@ -33,6 +33,7 @@ interface MatchInterfaceProps {
     scoringSystemParam?: number
   ) => void;
   setShowMatchHistoryModal: (show: boolean) => void;
+  setShowHelpModal: (show: boolean) => void;
   handleResume: () => void;
 }
 
@@ -70,12 +71,13 @@ export default function MatchInterface({
   handlePause,
   handleStartMatch,
   setShowMatchHistoryModal,
+  setShowHelpModal,
   handleResume,
 }: MatchInterfaceProps) {
   return (
-    <>
+    <div className="flex flex-col w-full h-full items-center justify-end sm:justify-center ">
       {/* Desktop Player Name Header */}
-      <div className="mt-6 w-full justify-center hidden sm:block">
+      <div className="mt-6 w-full hidden sm:block">
         <PlayerName
           players={players}
           timer={formatTime(time)}
@@ -114,7 +116,15 @@ export default function MatchInterface({
       </div>
 
       {/* Control Buttons Section */}
-      <div className="mt-3 sm:mt-5 flex flex-col items-center w-full">
+      <div className="mt-3 sm:mt-5 mb-0.5 sm:mb-0 flex flex-col items-center w-full">
+        {/* History Button (Positioned absolutely) */}
+        <div className="absolute left-5">
+          <IconButton
+            icon="/help.svg"
+            alt="Help"
+            onAction={() => setShowHelpModal(true)}
+          />
+        </div>
         <ActionButtons
           onUndo={handleUndo}
           onPause={handlePause}
@@ -132,6 +142,6 @@ export default function MatchInterface({
 
       {/* Pause Overlay */}
       {isPaused && <Pause handleResume={handleResume} />}
-    </>
+    </div>
   );
 }

@@ -3,6 +3,7 @@
 import Navbar from "@/components/NavBar";
 import StartMatchSection from "@/components/StartMatch";
 import MatchHistoryModal from "@/components/MatchHistoryModal";
+import HelpModal from "@/components/HelpModal";
 import MatchInterface from "@/components/MatchInterface";
 import SetFinishModal from "@/components/SetFinishModal";
 import { useMatchLogic } from "@/hooks/useMatchLogic";
@@ -40,6 +41,7 @@ export default function Page() {
     time,
     isPaused,
     showMatchHistoryModal,
+    showHelpModal,
     showSetFinishModal,
     historyForModal,
     isMatchStarted,
@@ -54,6 +56,7 @@ export default function Page() {
     continueNextSet,
     resetMatchHistory,
     setShowMatchHistoryModal,
+    setShowHelpModal,
 
     // Setters for controlled components
     setCurrentServer,
@@ -64,10 +67,10 @@ export default function Page() {
     <div className="flex flex-col h-screen bg-primary font-sans relative z-0 before:content-[''] before:absolute before:inset-0 before:bg-[url('/background.svg')] before:bg-no-repeat before:bg-cover before:opacity-20 before:z-[-1]">
       {/* --- Navigation Bar --- */}
       <Navbar onStartMatch={handleStartMatch} isMatchStarted={isMatchStarted} />
-      <div className="h-20 sm:h-24" />
+      <div className="h-12" />
 
       {/* --- Main Content Area --- */}
-      <div className="flex flex-col items-center flex-1 w-full">
+      <div className="flex flex-col items-center flex-1 w-full h-full">
         {!isMatchStarted ? (
           // 1. Show Start Section if match is not active
           <StartMatchSection onStartMatch={handleStartMatch} />
@@ -90,6 +93,7 @@ export default function Page() {
             handlePause={handlePause}
             handleStartMatch={handleStartMatch}
             setShowMatchHistoryModal={setShowMatchHistoryModal}
+            setShowHelpModal={setShowHelpModal}
             handleResume={handleResume}
           />
         )}
@@ -119,6 +123,9 @@ export default function Page() {
         scoringSystem={scoringSystem}
         onReset={resetMatchHistory}
       />
+
+      {/* Help Modal: Appears when help icon is clicked */}
+      <HelpModal show={showHelpModal} onClose={() => setShowHelpModal(false)} />
     </div>
   );
 }

@@ -22,6 +22,7 @@ import { matchReducer, initialState } from "@/utils/matchReducer";
  * @property {string | null} currentReceiver - The player currently receiving.
  * @property {number} scoringSystem - The target score (e.g., 21).
  * @property {boolean} showMatchHistoryModal - Visibility state for the history modal.
+ * @property {boolean} showHelpModal - Visibility state for the help modal.
  * @property {boolean} showSetFinishModal - Visibility state for the set finish modal.
  * @property {GameSnapshot | null} setFinishData - Data for the just-completed set.
  * @property {GameSnapshot[]} historyForModal - The complete match history, including any in-progress game.
@@ -60,6 +61,7 @@ export function useMatchLogic() {
 
   // --- Modal UI State (Local) ---
   const [showMatchHistoryModal, setShowMatchHistoryModal] = useState(false);
+  const [showHelpModal, setShowHelpModal] = useState(false);
   const [showSetFinishModal, setShowSetFinishModal] = useState(false);
 
   const setCurrentServer = (serverName: string) => {
@@ -194,6 +196,10 @@ export function useMatchLogic() {
     currentReceiver: state.currentReceiver,
     nextServer: state.nextServer,
     serveIndex: state.serveIndex,
+    players: {
+      teamA: [...state.players.teamA],
+      teamB: [...state.players.teamB],
+    },
   };
 
   /** The current set's history *plus* the latest snapshot. */
@@ -245,6 +251,7 @@ export function useMatchLogic() {
     time,
     isPaused,
     showMatchHistoryModal,
+    showHelpModal,
     showSetFinishModal,
     historyForModal,
     isMatchStarted,
@@ -261,6 +268,7 @@ export function useMatchLogic() {
 
     // Setters (for Modals)
     setShowMatchHistoryModal,
+    setShowHelpModal,
     setCurrentServer,
     setCurrentReceiver,
   };
