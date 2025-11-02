@@ -23,6 +23,8 @@ export type PointSnapshot = {
   nextServer: string | null;
   /** The current index in the `serveOrder` array (0-3 for doubles). */
   serveIndex: number;
+  /** The name of player. */
+  players: { teamA: string[]; teamB: string[] };
 };
 
 /**
