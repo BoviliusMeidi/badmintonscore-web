@@ -35,6 +35,9 @@ export const metadata: Metadata = {
     capable: true,
     title: 'Badminton Score',
     statusBarStyle: 'default',
+  },
+  alternates: {
+    canonical: 'https://badmintonscore-web.vercel.app'
   }
 };
 
